@@ -23,16 +23,16 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
 
         self._create_fleet()
-       
+
     def run_game(self):
         """Start the main loop for the game."""
         while True:
             self._check_events()
-            self.ship.update()                                
+            self.ship.update()
             self._update_bullets()
             self._update_screen()
-                    
-         
+
+
     def _check_events(self):
         """Respond to keypress and mouse events."""
         for event in pygame.event.get():
@@ -42,7 +42,7 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
-                
+
 
     def  _check_keydown_events(self, event):
         """Respond to keypresses."""
@@ -50,7 +50,7 @@ class AlienInvasion:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
-        elif event.key == pygame.K_SPACE:    
+        elif event.key == pygame.K_SPACE:
             self._fire_bullet()
         elif event.key == pygame.K_q:
             sys.exit()
@@ -89,18 +89,23 @@ class AlienInvasion:
 
         pygame.display.flip()
 
-    def _create_fleet(self): 
+    def _create_fleet(self):
         """Create the fleet of aliens"""
         # Make an alien
         alien = Alien(self)
-        self.aliens.add(alien)
+        alien_width = alien.rect.width
+        available_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+
+        # create the first row of aliens
+        for alien_number in range(number_aliens_x):
+            alien = Alien(self)
+            alien.x = alien_width + 2 * alien_width * alien_number
+            alien.rect.x = alien.x
+            self.aliens.add(alien)
 
 
 if __name__ == '__main__':
     # Make a game instance, and run the game.
     ai = AlienInvasion()
     ai.run_game()
-
-    
-
-
